@@ -807,6 +807,40 @@ document.addEventListener('click', e => {
 }, true);
 
 /* 底部頁碼列已依 2026-08-06 規範移除，避免與各頁底部尾註疊字 */
+
+/* === 白板貼上＝純文字：去掉外部網頁帶進來的底色、字體、字號等格式，只保留文字與換行 === */
+(function(){
+  const area = document.getElementById('wb-area');
+  if(!area) return;
+  area.addEventListener('paste', e => {
+    const cd = e.clipboardData || window.clipboardData;
+    if(!cd) return;
+    e.preventDefault();
+    const text = (cd.getData('text/plain') || '').replace(/\r\n?/g, '\n');
+    if(!document.execCommand('insertText', false, text)){
+      const sel = window.getSelection();
+      if(!sel.rangeCount) return;
+      const r = sel.getRangeAt(0);
+      r.deleteContents();
+      const frag = document.createDocumentFragment();
+      text.split('\n').forEach((line, i) => {
+        if(i) frag.appendChild(document.createElement('br'));
+        frag.appendChild(document.createTextNode(line));
+      });
+      const last = frag.lastChild;
+      r.insertNode(frag);
+      if(last){ r.setStartAfter(last); r.collapse(true); sel.removeAllRanges(); sel.addRange(r); }
+    }
+    area.dispatchEvent(new Event('input'));
+  });
+  /* 拖放進來的內容也一樣只收純文字 */
+  area.addEventListener('drop', e => {
+    const t = e.dataTransfer && e.dataTransfer.getData('text/plain');
+    if(t == null) return;
+    e.preventDefault();
+    document.execCommand('insertText', false, t);
+  });
+})();
 </script>
 </body>
 </html>
