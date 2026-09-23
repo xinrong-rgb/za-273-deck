@@ -431,6 +431,33 @@ p, li{font-family:var(--sans); font-size:26px; line-height:1.75; color:var(--ink
   .four-grid{grid-template-columns:repeat(4,1fr);}
   .qchain .node{font-size:13px; padding:6px 12px;}
 }
+
+/* ===== 全頁統一寬度與字級：不縮放，改由經文框內捲動吸收高度 ===== */
+/* 頁碼列只佔右下角約 60px 高，經文頁上下留白收緊，把高度讓給經文框 */
+.slide:has(.passage){align-items:stretch; padding-top:40px; padding-bottom:78px;}
+.slide:has(.passage) .aspects-head{margin-bottom:22px;}
+.slide:has(.passage) .five .sub, .slide:has(.passage) .sub{margin-bottom:22px;}
+.slide:has(.passage) .passage{margin-top:22px;}
+.slide:has(.passage) .slide-inner{
+  display:flex; flex-direction:column; justify-content:center;
+  height:100%; min-height:0; margin:0 auto;
+}
+.slide:has(.passage) .slide-inner > *{flex-shrink:0;}
+.slide:has(.passage) .slide-inner > .passage{
+  flex:0 1 auto; min-height:150px;
+  display:flex; flex-direction:column;
+}
+.passage .ptxt{
+  flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+  padding-right:10px;
+  scrollbar-width:thin; scrollbar-color:var(--accent) var(--bg-3);
+}
+.passage .ptxt::-webkit-scrollbar{width:10px;}
+.passage .ptxt::-webkit-scrollbar-track{background:var(--bg-3); border-radius:8px;}
+.passage .ptxt::-webkit-scrollbar-thumb{background:linear-gradient(180deg, var(--accent), #2a4860); border:2px solid var(--bg-3); border-radius:8px;}
+@media (max-width:720px){
+  .slide:has(.passage) .slide-inner > .passage{min-height:110px;}
+}
 </style>
 </head>
 <body>
@@ -686,7 +713,7 @@ totalPageEl.textContent = total;
 function fitSlide(s){
   const inner = s.querySelector('.slide-inner');
   if(!inner) return;
-  if(s.classList.contains('sutra')) return;   // 全文頁靠 su-box 自己捲動，不縮放
+  return;   // 2026-09-23：一律不縮放（避免各頁寬度／字級不一），高度由 .passage 框內捲動吸收
   inner.style.transform = 'none';
   inner.style.marginBottom = '';
   const cs = getComputedStyle(s);
