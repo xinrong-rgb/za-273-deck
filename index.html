@@ -455,6 +455,8 @@ p, li{font-family:var(--sans); font-size:26px; line-height:1.75; color:var(--ink
 .passage .ptxt::-webkit-scrollbar{width:10px;}
 .passage .ptxt::-webkit-scrollbar-track{background:var(--bg-3); border-radius:8px;}
 .passage .ptxt::-webkit-scrollbar-thumb{background:linear-gradient(180deg, var(--accent), #2a4860); border:2px solid var(--bg-3); border-radius:8px;}
+/* 結尾 CTA 頁：說明文字與咖啡色實踐框有 max-width，要左右 auto 才會真正置中（2026-09-23 使用者抓到偏左） */
+.cta .lead, .cta .cta-card{margin-left:auto; margin-right:auto;}
 @media (max-width:720px){
   .slide:has(.passage) .slide-inner > .passage{min-height:110px;}
 }
